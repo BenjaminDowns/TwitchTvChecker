@@ -1,0 +1,70 @@
+html body {
+    color: #E8E8E8;
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+}
+
+.streamers {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+    margin-bottom: 2vh;
+}
+
+.channel-body {
+    height: 14vh !important;
+    min-height: 80px;
+}
+
+img {
+    height: 14vh !important;
+    min-height: 80px;
+}
+
+.online {
+    background-color: #5bc0de;
+}
+
+.offline {
+    background-color: #7a8288;
+}
+
+.closed {
+    background-color: #1A1D21; 
+}
+
+#twitch-banner {
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+}
+
+.media-heading {
+    margin-top: 3vh;
+    margin-left: 5vh;
+}
+
+p {
+    margin-top: 1vh;
+    margin-left: 5vh;  
+}
+
+span.glyphicon-plus {
+    font-size: 1.3em;
+    color: black;
+}
+
+#getNewChannel {
+    display: none;
+}
+
+input {
+    max-height: 8vh !important;
+}
+
+#revealSearch {
+    margin-bottom: 2vh;
+}
