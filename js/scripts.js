@@ -17,7 +17,7 @@ $(function () {
         });
     }
 
-    function getChannels(callback) {
+    function getChannels() {
         for (let channel of CHANNEL_NAMES) {
             $.ajax({
                 method: 'get',
