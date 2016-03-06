@@ -10,7 +10,7 @@ $(function () {
             dataType: 'jsonp'
         });
         request.done(function (data) {
-            template(data, input)
+            render(data, input)
         });
         request.fail(function (data) {
             toggleSearch(data)
@@ -24,13 +24,13 @@ $(function () {
                 url: TWITCH_STREAMS + channel,
                 dataType: 'jsonp',
                 success: function (data) {
-                    template(data, channel);
+                    render(data, channel);
                 }
             });
         }
     }
 
-    function template(data, channelName) {
+    function render(data, channelName) {
         let logo, link, displayName, status, channel, onlineClass;
         const OFFLINE_LOGO = "http://mmotitles.com/wp-content/uploads/2014/01/54abc__DERP-Offline.jpg";
         
@@ -57,7 +57,7 @@ $(function () {
             onlineClass = "offline"
         }
 
-        channel = `<div class='media channel-body ${onlineClass}'><div class='media-left media-middle'><a href='${link}'>`
+        channel = `<div class='media channel-body ${onlineClass}'><div class='media-left media-middle'><a href='${link}' target='_blank'>`
         channel += `<img class='media-object logo' src=${logo} alt='Channel logo'></a></div>`
         channel += `<div class='media-body'><h3 class='media-heading'>${displayName}</h3>`
         channel += `<p>${status}<p>`
@@ -92,6 +92,5 @@ $(function () {
         getNewChannel(input)
         toggleSearch()
     })
-
-    getChannels(template)
+    getChannels(render)
 });
