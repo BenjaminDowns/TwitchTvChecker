@@ -76,7 +76,6 @@ $(function () {
     // })
     
     function toggleSearch(x) {
-        console.log('inside toggleSearch function')
         $('#getNewChannel').css('display') == 'none' ? $('#getNewChannel').slideDown() : $('#getNewChannel').slideUp()
         // TO BE IMPLEMENTED : handle errors if channel not found //
         // x === undefined ? $('#searchBoxInput').val('No channel by that name.') : $('#searchBoxInput').val("")
