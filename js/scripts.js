@@ -1,96 +1,90 @@
 'use strict'
-$(function () {
-    const TWITCH_STREAMS = 'https:/api.twitch.tv/kraken/streams/'
-    const CHANNEL_NAMES = ["freecodecamp", "storbeck", "terakilobyte", "habathcx", "RobotCaleb", "thomasballinger", "noobs2ninjas", "beohoff", "brunofin", "comster404", "cg_village_captain"]
+$(function() {
+  const TWITCH_STREAMS = 'https:/api.twitch.tv/kraken/streams/'
+  const CHANNEL_NAMES = ["freecodecamp", "storbeck", "terakilobyte", "habathcx", "RobotCaleb", "thomasballinger", "noobs2ninjas", "beohoff", "brunofin", "comster404", "cg_village_captain"]
 
-    function getNewChannel(input) {
-        var request = $.ajax({
-            method: 'get',
-            url: TWITCH_STREAMS + input,
-            dataType: 'jsonp'
-        });
-        request.done(function (data) {
-            render(data, input)
-        });
-        request.fail(function (data) {
-            toggleSearch(data)
-        });
+  function getNewChannel(input) {
+    var request = $.ajax({
+      method: 'get',
+      url: TWITCH_STREAMS + input,
+      dataType: 'jsonp'
+    });
+    request.done(data => render(data, input));
+    request.fail(data => toggleSearch(data));
+  }
+
+  function getChannels() {
+    for (let channel of CHANNEL_NAMES) {
+      $.ajax({
+        method: 'get',
+        url: TWITCH_STREAMS + channel,
+        dataType: 'jsonp',
+        success: data => render(data, channel);
+      });
+    }
+  }
+
+  function render(data, channelName) {
+    let logo, link, displayName, status, channel, onlineClass;
+    const OFFLINE_LOGO = "http://mmotitles.com/wp-content/uploads/2014/01/54abc__DERP-Offline.jpg";
+
+    if (data.error) {
+      logo = OFFLINE_LOGO;
+      link = "http://www.twitch.tv"
+      displayName = channelName
+      status = "channel permanently closed"
+      onlineClass = "closed"
     }
 
-    function getChannels() {
-        for (let channel of CHANNEL_NAMES) {
-            $.ajax({
-                method: 'get',
-                url: TWITCH_STREAMS + channel,
-                dataType: 'jsonp',
-                success: function (data) {
-                    render(data, channel);
-                }
-            });
-        }
+    if (data.stream !== null && !data.error) {
+      channel = data.stream.channel
+      logo = channel.logo || "http://www.greatbitblog.com/wp-content/uploads/2014/05/youtube-buys-twitch.jpg"
+      link = channel.url;
+      displayName = channel.display_name;
+      status = channel.status;
+      onlineClass = "online"
+    } else if (!data.error) {
+      logo = OFFLINE_LOGO;
+      displayName = data._links.channel.substr(38)
+      link = `http://www.twitch.tv/${displayName}`
+      status = ''
+      onlineClass = "offline"
     }
 
-    function render(data, channelName) {
-        let logo, link, displayName, status, channel, onlineClass;
-        const OFFLINE_LOGO = "http://mmotitles.com/wp-content/uploads/2014/01/54abc__DERP-Offline.jpg";
-        
-        if (data.error) {
-            logo = OFFLINE_LOGO;
-            link = "http://www.twitch.tv"
-            displayName = channelName
-            status = "channel permanently closed"
-            onlineClass = "closed"
-        }
+    channel = `<div class='media channel-body ${onlineClass}'><div class='media-left media-middle'><a href='${link}' target='_blank'>`
+    channel += `<img class='media-object logo' src=${logo} alt='Channel logo'></a></div>`
+    channel += `<div class='media-body'><h3 class='media-heading'>${displayName}</h3>`
+    channel += `<p>${status}<p>`
+    channel += "</div></div>"
 
-        if (data.stream !== null && !data.error) {
-            channel = data.stream.channel
-            logo = channel.logo || "http://www.greatbitblog.com/wp-content/uploads/2014/05/youtube-buys-twitch.jpg"
-            link = channel.url;
-            displayName = channel.display_name;
-            status = channel.status;
-            onlineClass = "online"
-        } else if (!data.error) {
-            logo = OFFLINE_LOGO;
-            displayName = data._links.channel.substr(38)
-            link = `http://www.twitch.tv/${displayName}`          
-            status = ''
-            onlineClass = "offline"
-        }
+    onlineClass != "online" ? $('#unavailable').append(channel) : $('#available').append(channel)
+  }
+  // NOT NECESSARY; MAYBE DO LATER
+  // $('#online').on('click', function (e) {
+  //     $('.offline').hide('fast');
+  //     $('.online').show('fast')
+  //     // $('.online').fadeUp();
+  // })
 
-        channel = `<div class='media channel-body ${onlineClass}'><div class='media-left media-middle'><a href='${link}' target='_blank'>`
-        channel += `<img class='media-object logo' src=${logo} alt='Channel logo'></a></div>`
-        channel += `<div class='media-body'><h3 class='media-heading'>${displayName}</h3>`
-        channel += `<p>${status}<p>`
-        channel += "</div></div>"
+  // $('#offline').on('click', function (e) {
+  //     $('.online').hide('fast')
+  //     $('.offline').show('fast')          
+  // })
 
-        onlineClass != "online" ? $('#unavailable').append(channel) : $('#available').append(channel)
-    }
-    // NOT NECESSARY; MAYBE DO LATER
-    // $('#online').on('click', function (e) {
-    //     $('.offline').hide('fast');
-    //     $('.online').show('fast')
-    //     // $('.online').fadeUp();
-    // })
+  function toggleSearch(x) {
+    $('#getNewChannel').css('display') == 'none' ? $('#getNewChannel').slideDown() : $('#getNewChannel').slideUp()
+    $('#searchBoxInput').val("")
+      // TO BE IMPLEMENTED : handle errors if channel not found //
+      // x === undefined ? $('#searchBoxInput').val('No channel by that name.') : $('#searchBoxInput').val("")
+  }
 
-    // $('#offline').on('click', function (e) {
-    //     $('.online').hide('fast')
-    //     $('.offline').show('fast')          
-    // })
-    
-    function toggleSearch(x) {
-        $('#getNewChannel').css('display') == 'none' ? $('#getNewChannel').slideDown() : $('#getNewChannel').slideUp()
-        $('#searchBoxInput').val("")
-        // TO BE IMPLEMENTED : handle errors if channel not found //
-        // x === undefined ? $('#searchBoxInput').val('No channel by that name.') : $('#searchBoxInput').val("")
-    }
+  $('#revealSearch').on('click', toggleSearch)
 
-    $('#revealSearch').on('click', toggleSearch)
-
-    $('#channelSearch').on('click', function (e) {
-        e.preventDefault();
-        var input = $('#searchBoxInput').val()
-        getNewChannel(input)
-        toggleSearch()
-    })
-    getChannels(render)
+  $('#channelSearch').on('click', function(e) {
+    e.preventDefault();
+    var input = $('#searchBoxInput').val()
+    getNewChannel(input)
+    toggleSearch()
+  })
+  getChannels(render)
 });
