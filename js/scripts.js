@@ -32,8 +32,10 @@ $(function () {
 
     function template(data, channelName) {
         let logo, link, displayName, status, channel, onlineClass;
+        const OFFLINE_LOGO = "http://mmotitles.com/wp-content/uploads/2014/01/54abc__DERP-Offline.jpg";
+        
         if (data.error) {
-            logo = "http://mmotitles.com/wp-content/uploads/2014/01/54abc__DERP-Offline.jpg";
+            logo = OFFLINE_LOGO;
             link = "http://www.twitch.tv"
             displayName = channelName
             status = "channel permanently closed"
@@ -48,7 +50,7 @@ $(function () {
             status = channel.status;
             onlineClass = "online"
         } else if (!data.error) {
-            logo = "http://mmotitles.com/wp-content/uploads/2014/01/54abc__DERP-Offline.jpg";
+            logo = OFFLINE_LOGO;
             displayName = data._links.channel.substr(38)
             link = `http://www.twitch.tv/${displayName}`          
             status = ''
