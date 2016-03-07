@@ -19,7 +19,7 @@ $(function() {
         method: 'get',
         url: TWITCH_STREAMS + channel,
         dataType: 'jsonp',
-        success: data => render(data, channel);
+        success: data => render(data, channel)
       });
     }
   }
